@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * JWTiny
+ * v1.0
+ * https://github.com/ginger-tek/jwtiny
+ */
+
 class JWTiny
 {
   static function sign(mixed $data, string $secret, ?int $exp = null)
