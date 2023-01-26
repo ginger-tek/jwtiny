@@ -1,14 +1,8 @@
 <?php
 
-/**
- * JWTiny
- * v1.0
- * https://github.com/ginger-tek/jwtiny
- */
-
 class JWTiny
 {
-  static function sign(mixed $data, string $secret, ?int $exp = null)
+  public static function sign(mixed $data, string $secret, ?int $exp = null): string
   {
     $payload = ['data' => $data, 'exp' => $exp ?? time() + 60000, 'iat' => time()];
     $b64header = base64_encode(json_encode(['typ' => 'JWT', 'alg' => 'HS256']));
@@ -17,9 +11,10 @@ class JWTiny
     return "$b64header.$b64payload.$b64sig";
   }
 
-  static function verify(string $jwt, string $secret)
+  public static function verify(string $jwt, string $secret = null): bool
   {
     try {
+      if (!$secret) $secret = JWTiny::getKey();
       $tokenParts = explode('.', $jwt);
       $header = base64_decode($tokenParts[0]);
       $payload = base64_decode($tokenParts[1]);
@@ -34,7 +29,7 @@ class JWTiny
     }
   }
 
-  static function genKey()
+  public static function genKey(): string
   {
     return bin2hex(random_bytes(32));
   }
