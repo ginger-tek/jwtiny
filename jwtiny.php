@@ -11,7 +11,7 @@ class JWTiny
     return "$b64header.$b64payload.$b64sig";
   }
 
-  public static function verify(string $jwt, string $secret = null): bool
+  public static function verify(string $jwt, string $secret = null): bool|object
   {
     try {
       if (!$secret) $secret = JWTiny::getKey();
