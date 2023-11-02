@@ -11,10 +11,10 @@ class JWTiny
     return "$b64header.$b64payload.$b64sig";
   }
 
-  public static function verify(string $jwt, string $secret = null): bool|object
+  public static function verify(string $jwt, string $secret): bool|object
   {
     try {
-      if (!$secret) $secret = JWTiny::getKey();
+      if (!$secret) throw new Exception('Missing secret');
       $tokenParts = explode('.', $jwt);
       $header = base64_decode($tokenParts[0]);
       $payload = base64_decode($tokenParts[1]);
