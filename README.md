@@ -21,8 +21,10 @@ $token = JWTiny::sign($data, $secret, $expires);
 ```php
 $token = '...';
 $secret = 'mysecretkey';
-$data = JWTiny::verify($token, $secret);
-
-if($data === false) // handle invalid token
-else $data->username // access data
+try {
+  $data = JWTiny::verify($token, $secret);
+  $data->username // access data
+} catch(Exception $ex) {
+  // handle failure to verify token
+}
 ```
