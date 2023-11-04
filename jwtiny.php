@@ -11,22 +11,18 @@ class JWTiny
     return "$b64header.$b64payload.$b64sig";
   }
 
-  public static function verify(string $jwt, string $secret): bool|object
+  public static function verify(string $jwt, string $secret): object
   {
-    try {
-      if (!$secret) throw new Exception('Missing secret');
-      $tokenParts = explode('.', $jwt);
-      $header = base64_decode($tokenParts[0]);
-      $payload = base64_decode($tokenParts[1]);
-      $data = json_decode($payload);
-      $signature = $tokenParts[2];
-      if (time() > $data->exp) return false;
-      $b64sig = base64_encode(hash_hmac('sha256', base64_encode($header) . '.' . base64_encode($payload), $secret, true));
-      if ($signature === $b64sig) return $data;
-      return false;
-    } catch (Exception $e) {
-      return false;
-    }
+    if (!$secret) throw new Exception('Missing secret');
+    $tokenParts = explode('.', $jwt);
+    $header = base64_decode($tokenParts[0]);
+    $payload = base64_decode($tokenParts[1]);
+    $data = json_decode($payload, null, 512, JSON_THROW_ON_ERROR);
+    $signature = $tokenParts[2];
+    if (time() > $data->exp) return false;
+    $b64sig = base64_encode(hash_hmac('sha256', base64_encode($header) . '.' . base64_encode($payload), $secret, true));
+    if ($signature === $b64sig) return $data;
+    return false;
   }
 
   public static function genKey(): string
