@@ -23,7 +23,7 @@ $token = '...';
 $secret = 'mysecretkey';
 try {
   $data = JWTiny::verify($token, $secret);
-  $data->username // access data
+  $data->username; // access data
 } catch(Exception $ex) {
   // handle failure to verify token
 }
